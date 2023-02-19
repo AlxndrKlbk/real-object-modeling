@@ -17,4 +17,5 @@ Development roadmap include next goals:
     - write function for assess efficient of structure
 * C++ prototype
     - write C-extension for the most resource-intensive modules
+
 ... In progress
