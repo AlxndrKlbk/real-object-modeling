@@ -1,4 +1,4 @@
-"""Bodule with vase realisattion"""
+"""Module with base realisation"""
 
 __author__ = 'Kolbeko A.B'
 

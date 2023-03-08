@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from typing import List, Type, NoReturn, Callable, Dict, Iterable
 
 # internal
-from src.measurements.abc_measurements import AbcDimension
+from core.measurements import AbcDimension
 
 dimensions_hint = List[Type[Callable[[AbcDimension, ...], AbcDimension]]]
 
