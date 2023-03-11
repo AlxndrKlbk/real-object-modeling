@@ -3,11 +3,12 @@
 __author__ = 'Kolbeko A.B.'
 
 # built-in
-from typing import Optional, Dict
+from typing import Optional, Dict, NoReturn
 import tkinter as tk
 
 # internal
-from .DefaultRow import DefaultRow
+from .default_row import DefaultRow
+from .button_toolbar import ButtonsToolbar
 from ..const.params_keys import ParamsKeys
 
 
@@ -17,9 +18,10 @@ class RowsObserver(tk.LabelFrame):
     def __init__(self, master, items: Optional[Dict] = None):
         super().__init__(master, text=items.get(ParamsKeys.FRAME_NAME))
 
-        # ToDo add frame with buttons
         # ToDo add frame with column names
-        tk.Button(self, text="Add object", command=self.add_row).pack(side=tk.TOP)
+        buttons_spec = [('Add object', self.add_row),
+                        ('Del object', self.del_row)]
+        self.__buttons_toolbar = ButtonsToolbar(self, buttons_spec)
 
         items = items if items else {}
 
@@ -51,15 +53,18 @@ class RowsObserver(tk.LabelFrame):
         self.rows_list.insert(total_row, new_row)
         self.update()
 
-    def del_row(self):
-        """Method for deleting row"""
-        # ToDo
-        ...
+    def del_row(self) -> NoReturn:
+        """
+        Method for delete last added row
+        """
+        if len(self.rows_list) > 1:
+            self.rows_list.pop().destroy()
 
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
+
         self.x_scale = self.winfo_screenwidth()
         self.y_scale = self.winfo_screenheight()
         self.geometry(f'{self.x_scale}x{self.y_scale}')
