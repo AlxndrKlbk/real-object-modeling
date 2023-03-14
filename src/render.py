@@ -1,4 +1,4 @@
-from gui.containers.raw_observer import App
+from gui.containers.app import App
 
 if __name__ == "__main__":
     app = App()

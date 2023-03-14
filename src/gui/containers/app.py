@@ -1,0 +1,43 @@
+"""main App module"""
+
+__author__ = 'Kolbeko A.B.'
+
+# built-in
+import tkinter as tk
+
+# internal
+from .raw_observer import RowsObserver
+from ..const.params_keys import ParamsKeys
+from ..const.hex_colors import HexColors
+
+
+components_inits = [
+    {ParamsKeys.ENTRIES_COUNT: 3, ParamsKeys.TITLE: 'Object', ParamsKeys.X_RATIO: 0.6, ParamsKeys.Y_RATIO: 0.4,
+     ParamsKeys.FRAME_NAME: 'Objects frame', ParamsKeys.BACKGROUND: HexColors.LIGHT_GREEN},
+    {ParamsKeys.ENTRIES_COUNT: 4, ParamsKeys.TITLE: 'Measurement', ParamsKeys.X_RATIO: 0.6, ParamsKeys.Y_RATIO: 0.4,
+     ParamsKeys.FRAME_NAME: 'Measurements frame', ParamsKeys.BACKGROUND: HexColors.EGS_YELLOW}
+]
+
+
+class App(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.x_scale = self.winfo_screenwidth()
+        self.y_scale = self.winfo_screenheight()
+        self.geometry(f'{self.x_scale}x{self.y_scale}')
+        self.canvases = {}
+
+        for content_data in components_inits:
+            init_data = {
+                'width': content_data.get(ParamsKeys.X_RATIO) * self.x_scale,
+                'height': content_data.get(ParamsKeys.Y_RATIO) * self.y_scale,
+                'text': content_data.get(ParamsKeys.TITLE),
+                ParamsKeys.BACKGROUND: content_data.get(ParamsKeys.BACKGROUND)
+            }
+
+            nested_frame = RowsObserver(self, **init_data)
+            nested_frame.load_content(content_data)
+            nested_frame.pack(side=tk.TOP)
+            nested_frame.propagate(False)
+            self.canvases[content_data.get(ParamsKeys.FRAME_NAME)] = nested_frame

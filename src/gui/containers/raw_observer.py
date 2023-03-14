@@ -5,6 +5,7 @@ __author__ = 'Kolbeko A.B.'
 # built-in
 from typing import Optional, Dict, NoReturn
 import tkinter as tk
+from tkinter import ttk
 
 # internal
 from .default_row import DefaultRow
@@ -15,23 +16,30 @@ from ..const.params_keys import ParamsKeys
 class RowsObserver(tk.LabelFrame):
     """Container for rows"""
 
-    def __init__(self, master, items: Optional[Dict] = None):
-        super().__init__(master, text=items.get(ParamsKeys.FRAME_NAME))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.rows_list = []
+        self.scrollbar: tk.Scrollbar = ...
+        self._entries_count: int = ...
+        self._row_title: str = ...
+        self._buttons_toolbar: ButtonsToolbar = ...
 
+    def load_content(self, params: Optional[Dict] = None):
         # ToDo add frame with column names
         buttons_spec = [('Add object', self.add_row),
                         ('Del object', self.del_row)]
-        self.__buttons_toolbar = ButtonsToolbar(self, buttons_spec)
+        self._buttons_toolbar = ButtonsToolbar(self, buttons_spec)
 
-        items = items if items else {}
+        params = params if params else {}
 
-        self._entries_count = items.get(ParamsKeys.ENTRIES_COUNT)
-        self._row_title = items.get(ParamsKeys.TITLE)
+        self._entries_count = params.get(ParamsKeys.ENTRIES_COUNT)
+        self._row_title = params.get(ParamsKeys.TITLE)
 
         # ToDo fix scroll bar
-        self.scroll = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.scroll.pack(side=tk.RIGHT, fill=tk.Y)
-        self.rows_list = []
+        self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk. Y, expand=False)
+
+
         params = {ParamsKeys.ENTRIES_COUNT: self._entries_count,
                   ParamsKeys.ROW_NUM: len(self.rows_list),
                   ParamsKeys.TITLE: self._row_title}
@@ -60,23 +68,3 @@ class RowsObserver(tk.LabelFrame):
         if len(self.rows_list) > 1:
             self.rows_list.pop().destroy()
 
-
-class App(tk.Tk):
-    def __init__(self):
-        super().__init__()
-
-        self.x_scale = self.winfo_screenwidth()
-        self.y_scale = self.winfo_screenheight()
-        self.geometry(f'{self.x_scale}x{self.y_scale}')
-
-        self.frame_a = RowsObserver(self,
-                                    {ParamsKeys.ENTRIES_COUNT: 3, ParamsKeys.TITLE: 'Object',
-                                     ParamsKeys.FRAME_NAME: 'Objects frame', ParamsKeys.X_SCALE: self.x_scale,
-                                     ParamsKeys.Y_SCALE: self.y_scale})
-        self.frame_a.pack(side=tk.TOP)
-
-        self.frame_b = RowsObserver(self,
-                                    {ParamsKeys.ENTRIES_COUNT: 4, ParamsKeys.TITLE: 'Measurement',
-                                     ParamsKeys.FRAME_NAME: 'Measurements frame', ParamsKeys.X_SCALE: self.x_scale,
-                                     ParamsKeys.Y_SCALE: self.y_scale})
-        self.frame_b.pack(anchor=tk.CENTER, side=tk.TOP)
