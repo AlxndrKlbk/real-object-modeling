@@ -23,32 +23,71 @@ class RowsObserver(tk.LabelFrame):
         self._entries_count: int = ...
         self._row_title: str = ...
         self._buttons_toolbar: ButtonsToolbar = ...
+        self.interior: tk.Frame = ...
 
-    def load_content(self, params: Optional[Dict] = None):
-        # ToDo add frame with column names
-        buttons_spec = [('Add object', self.add_row),
-                        ('Del object', self.del_row)]
-        self._buttons_toolbar = ButtonsToolbar(self, buttons_spec)
-
+    def load_content(self, init_data: Dict, params: Optional[Dict] = None) -> NoReturn:
+        """
+        Method for Downloads data to components of parent frame
+        Args:
+            init_data: dict for canvas init
+            params: dict for other components init
+        """
         params = params if params else {}
 
         self._entries_count = params.get(ParamsKeys.ENTRIES_COUNT)
         self._row_title = params.get(ParamsKeys.TITLE)
 
-        # ToDo fix scroll bar
+        self._init_canvas(**init_data)
+        self.interior = tk.Frame(self.canvas, **init_data)
+
+        # ToDo add frame with column names
+        buttons_spec = [('Add row', self.add_row),
+                        ('Del row', self.del_row)]
+        self._buttons_toolbar = ButtonsToolbar(self.interior, buttons_spec)
+
+        interior_id = self.canvas.create_window(0, 0, window=self.interior, anchor=tk.NW)
+
+        self._bind_interior()
+        self._bind_canvas(interior_id)
+
+    def _init_canvas(self, **kwargs) -> NoReturn:
+        """
+        Method initialize canvas and scrollbar
+        """
         self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        self.scrollbar.pack(side=tk.RIGHT, fill=tk. Y, expand=False)
+        self.scrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
+        self.canvas = tk.Canvas(self, bd=0, highlightthickness=0,
+                                yscrollcommand=self.scrollbar.set, **kwargs)
 
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
+        self.scrollbar.config(command=self.canvas.yview)
 
-        params = {ParamsKeys.ENTRIES_COUNT: self._entries_count,
-                  ParamsKeys.ROW_NUM: len(self.rows_list),
-                  ParamsKeys.TITLE: self._row_title}
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
 
-        new_row = DefaultRow(self, params)
-        new_row.pack(anchor=tk.S, side=tk.TOP)
-        self.rows_list.insert(0, new_row)
+    def _bind_interior(self) -> NoReturn:
+        """
+        Update the scrollbars to match the size of the inner frame.
+        """
+        def _configure_interior(_):
+            size = (0, 0, str(self.interior.winfo_reqwidth()), str(self.interior.winfo_reqheight()))
+            self.canvas.config(scrollregion=size)
+            if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+                self.canvas.config(width=self.interior.winfo_reqwidth())
+        self.interior.bind('<Configure>', _configure_interior)
 
-    def add_row(self):
+    def _bind_canvas(self, interior_id: int) -> NoReturn:
+        """
+        Update the inner frame's width to fill the canvas.
+        Args:
+            interior_id: identifier of window
+        """
+        def _configure_canvas(_):
+            if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+                self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
+        self.canvas.bind('<Configure>', _configure_canvas)
+
+    def add_row(self) -> NoReturn:
         """Method for inserting row"""
         total_row = len(self.rows_list)
 
@@ -56,7 +95,7 @@ class RowsObserver(tk.LabelFrame):
                       ParamsKeys.ROW_NUM: total_row,
                       ParamsKeys.TITLE: self._row_title}
 
-        new_row = DefaultRow(self, raw_params)
+        new_row = DefaultRow(self.interior, raw_params)
         new_row.pack(anchor=tk.S, side=tk.TOP)
         self.rows_list.insert(total_row, new_row)
         self.update()
@@ -67,4 +106,3 @@ class RowsObserver(tk.LabelFrame):
         """
         if len(self.rows_list) > 1:
             self.rows_list.pop().destroy()
-

@@ -26,18 +26,21 @@ class App(tk.Tk):
         self.x_scale = self.winfo_screenwidth()
         self.y_scale = self.winfo_screenheight()
         self.geometry(f'{self.x_scale}x{self.y_scale}')
-        self.canvases = {}
+        self.frames = {}
 
         for content_data in components_inits:
             init_data = {
-                'width': content_data.get(ParamsKeys.X_RATIO) * self.x_scale,
-                'height': content_data.get(ParamsKeys.Y_RATIO) * self.y_scale,
-                'text': content_data.get(ParamsKeys.TITLE),
+                ParamsKeys.WIDTH: content_data.get(ParamsKeys.X_RATIO) * self.x_scale,
+                ParamsKeys.HEIGHT: content_data.get(ParamsKeys.Y_RATIO) * self.y_scale,
+                ParamsKeys.TITLE: content_data.get(ParamsKeys.TITLE),
                 ParamsKeys.BACKGROUND: content_data.get(ParamsKeys.BACKGROUND)
             }
 
             nested_frame = RowsObserver(self, **init_data)
-            nested_frame.load_content(content_data)
+
+            init_data.pop(ParamsKeys.TITLE)
+            nested_frame.load_content(init_data, content_data)
             nested_frame.pack(side=tk.TOP)
             nested_frame.propagate(False)
-            self.canvases[content_data.get(ParamsKeys.FRAME_NAME)] = nested_frame
+            nested_frame.add_row()
+            self.frames[content_data.get(ParamsKeys.FRAME_NAME)] = nested_frame

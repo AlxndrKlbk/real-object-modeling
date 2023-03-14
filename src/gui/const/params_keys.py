@@ -19,4 +19,5 @@ class ParamsKeys(str, Enum):
     BACKGROUND = 'background'
     X_RATIO = 'x_ratio'
     Y_RATIO = 'y_ratio'
-
+    WIDTH = 'width'
+    HEIGHT = 'height'
