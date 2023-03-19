@@ -12,7 +12,7 @@ class ParamsKeys(str, Enum):
 
     TITLE = 'text'
     ROW_NUM = 'row_num'
-    ENTRIES_COUNT = 'entries_count'
+    ENTRIES = 'ENTRIES'
     FRAME_NAME = 'frame_name'
     X_SCALE = 'x_scale'
     Y_SCALE = 'y_scale'

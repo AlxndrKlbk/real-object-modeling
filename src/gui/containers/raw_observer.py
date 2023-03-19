@@ -3,7 +3,7 @@
 __author__ = 'Kolbeko A.B.'
 
 # built-in
-from typing import Optional, Dict, NoReturn
+from typing import Optional, Dict, NoReturn, List
 import tkinter as tk
 from tkinter import ttk
 
@@ -20,7 +20,7 @@ class RowsObserver(tk.LabelFrame):
         super().__init__(*args, **kwargs)
         self.rows_list = []
         self.scrollbar: tk.Scrollbar = ...
-        self._entries_count: int = ...
+        self._entries: List[str] = ...
         self._row_title: str = ...
         self._buttons_toolbar: ButtonsToolbar = ...
         self.interior: tk.Frame = ...
@@ -34,21 +34,30 @@ class RowsObserver(tk.LabelFrame):
         """
         params = params if params else {}
 
-        self._entries_count = params.get(ParamsKeys.ENTRIES_COUNT)
+        self._entries = params.get(ParamsKeys.ENTRIES)
         self._row_title = params.get(ParamsKeys.TITLE)
 
         self._init_canvas(**init_data)
         self.interior = tk.Frame(self.canvas, **init_data)
 
-        # ToDo add frame with column names
         buttons_spec = [('Add row', self.add_row),
                         ('Del row', self.del_row)]
         self._buttons_toolbar = ButtonsToolbar(self.interior, buttons_spec)
+        self._add_title(**init_data)
 
         interior_id = self.canvas.create_window(0, 0, window=self.interior, anchor=tk.NW)
 
         self._bind_interior()
         self._bind_canvas(interior_id)
+
+    def _add_title(self, **kwargs):
+        space_frame = tk.Frame(self.interior, **kwargs)
+        space_frame.pack(side=tk.TOP)
+        titles_frame = tk.Frame(space_frame, **kwargs)
+        titles_frame.pack(side=tk.RIGHT, anchor=tk.E, pady=10)
+        for col_name in self._entries:
+            label = tk.Label(titles_frame, text=col_name)
+            label.pack(side=tk.LEFT, anchor=tk.S, padx=100, pady=20)
 
     def _init_canvas(self, **kwargs) -> NoReturn:
         """
@@ -85,13 +94,14 @@ class RowsObserver(tk.LabelFrame):
         def _configure_canvas(_):
             if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
                 self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
+
         self.canvas.bind('<Configure>', _configure_canvas)
 
     def add_row(self) -> NoReturn:
         """Method for inserting row"""
         total_row = len(self.rows_list)
 
-        raw_params = {ParamsKeys.ENTRIES_COUNT: self._entries_count,
+        raw_params = {ParamsKeys.ENTRIES: self._entries,
                       ParamsKeys.ROW_NUM: total_row,
                       ParamsKeys.TITLE: self._row_title}
 

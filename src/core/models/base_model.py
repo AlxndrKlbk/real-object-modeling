@@ -26,7 +26,7 @@ class BaseModel(AbcModel):
         init_container = []
         for spec in spec_sequence:
 
-            #  Todo
+            #  ToDo
             #  define possible spec types, data structures and handlers for them
             initialized = spec()
             init_container.append(initialized)

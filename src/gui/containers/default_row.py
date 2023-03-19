@@ -1,4 +1,4 @@
-"""Module with base realization of row"""
+"""Module with base realization of input row"""
 
 __author__ = 'Kolbeko A.B.'
 
@@ -21,7 +21,7 @@ class DefaultRow(tk.Frame):
         super().__init__(parent)
         title_str = params.get(ParamsKeys.TITLE)
         row_num = params.get(ParamsKeys.ROW_NUM)
-        entries_count = params.get(ParamsKeys.ENTRIES_COUNT)
+        entries_count = len(params.get(ParamsKeys.ENTRIES))
 
         label = tk.Label(self, text=f'{title_str} №{row_num+1}')
         label.pack(side=tk.LEFT, padx=25, pady=5)
@@ -37,3 +37,10 @@ class DefaultRow(tk.Frame):
         self.label.destroy()
         [entry.destroy() for entry in self.entries]
         super().destroy()
+
+    def get_entries_data(self):
+        entries_content = {}
+        for i, data in enumerate(self.entries):
+            ...
+
+        return entries_content
