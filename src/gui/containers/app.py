@@ -4,6 +4,8 @@ __author__ = 'Kolbeko A.B.'
 
 # built-in
 import tkinter as tk
+from tkinter import messagebox
+from typing import List, Dict
 
 # internal
 from .raw_observer import RowsObserver
@@ -27,7 +29,10 @@ class App(tk.Tk):
         self.y_scale = self.winfo_screenheight()
         self.geometry(f'{self.x_scale}x{self.y_scale}')
         self.frames = {}
+        self._init_components(components_inits)
+        self._set_callbacks()
 
+    def _init_components(self, components_data: List[Dict]):
         for content_data in components_inits:
             init_data = {
                 ParamsKeys.WIDTH: content_data.get(ParamsKeys.X_RATIO) * self.x_scale,
@@ -44,3 +49,10 @@ class App(tk.Tk):
             nested_frame.propagate(False)
             nested_frame.add_row()
             self.frames[content_data.get(ParamsKeys.FRAME_NAME)] = nested_frame
+
+    def _set_callbacks(self):
+        self.protocol("WM_DELETE_WINDOW", self._quite_callback)
+
+    def _quite_callback(self):
+        if tk.messagebox.askokcancel("Quit", "Do you really wish to quit?"):
+            self.destroy()
