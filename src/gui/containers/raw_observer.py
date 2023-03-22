@@ -18,7 +18,7 @@ class RowsObserver(tk.LabelFrame):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.rows_list = []
+        self.rows_list: List[DefaultRow] = []
         self.scrollbar: tk.Scrollbar = ...
         self._entries: List[str] = ...
         self._row_title: str = ...
@@ -116,3 +116,15 @@ class RowsObserver(tk.LabelFrame):
         """
         if len(self.rows_list) > 1:
             self.rows_list.pop().destroy()
+
+    def load_data_from_entries(self) -> List[Dict]:
+        """
+        Method for extracting data from all input rows
+        Returns:
+            List[Dict]
+        """
+        raws_data = []
+        for entre in self.rows_list:
+            entries_data = entre.get_entries_data()
+            raws_data.append(entries_data)
+        return raws_data

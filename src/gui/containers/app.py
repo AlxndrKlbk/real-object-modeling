@@ -4,15 +4,17 @@ __author__ = 'Kolbeko A.B.'
 
 # built-in
 import tkinter as tk
-from typing import List, Dict
+from typing import List, Dict, NoReturn
 from functools import partial
 
 # internal
+from loaders import save_to_xml
 from .raw_observer import RowsObserver
 from ..const.params_keys import ParamsKeys
 from ..const.hex_colors import HexColors
 from ..const.ui_text import MEASUREMENT_FRAME_COLUMN_NAMES, OBJECT_FRAME_COLUMN_NAMES
 from .handlers import quite_callback
+
 
 components_inits = [
     {ParamsKeys.ENTRIES: OBJECT_FRAME_COLUMN_NAMES, ParamsKeys.TITLE: 'Object', ParamsKeys.X_RATIO: 0.6,
@@ -33,7 +35,20 @@ class App(tk.Tk):
         self._init_components(components_inits)
         self._set_callbacks()
 
-    def _init_components(self, components_data: List[Dict]):
+    def _init_components(self, observers_data: List[Dict]):
+        observers_frame = tk.Frame(self)
+        buttons_frame = tk.Frame(self, background=HexColors.LIGHT_GREEN,
+                                 width=self.x_scale*0.4, height=self.y_scale*0.4)
+        self._add_input_frames(observers_frame, observers_data)
+        self._add_main_buttons(buttons_frame)
+        observers_frame.pack(side=tk.LEFT, padx=50)
+        buttons_frame.pack(side=tk.LEFT, padx=20)
+
+    def _add_main_buttons(self, frame: tk.Frame):
+        button = tk.Button(frame, text='save to xml', command=self.load_data_from_entries, bg=HexColors.BLUE)
+        button.pack(side=tk.TOP)
+
+    def _add_input_frames(self, frame: tk.Frame, components_data: List[Dict]):
         for content_data in components_data:
             init_data = {
                 ParamsKeys.WIDTH: content_data.get(ParamsKeys.X_RATIO) * self.x_scale,
@@ -42,7 +57,7 @@ class App(tk.Tk):
                 ParamsKeys.BACKGROUND: content_data.get(ParamsKeys.BACKGROUND)
             }
 
-            nested_frame = RowsObserver(self, **init_data)
+            nested_frame = RowsObserver(frame, **init_data)
 
             init_data.pop(ParamsKeys.TITLE)
             nested_frame.load_content(init_data, content_data)
@@ -54,3 +69,14 @@ class App(tk.Tk):
     def _set_callbacks(self):
         quite_wrapper = partial(quite_callback, self)
         self.protocol("WM_DELETE_WINDOW", quite_wrapper)
+
+    def load_data_from_entries(self) -> NoReturn:
+        """
+        Method for save data from input boxes. Binded to button
+        """
+        result = {}
+        for observer_name, observer in self.frames.items():
+            observer_data = observer.load_data_from_entries()
+            result[observer_name] = observer_data
+
+        save_to_xml(result)

@@ -21,26 +21,31 @@ class DefaultRow(tk.Frame):
         super().__init__(parent)
         title_str = params.get(ParamsKeys.TITLE)
         row_num = params.get(ParamsKeys.ROW_NUM)
-        entries_count = len(params.get(ParamsKeys.ENTRIES))
+        entries_names = params.get(ParamsKeys.ENTRIES)
 
         label = tk.Label(self, text=f'{title_str} №{row_num+1}')
         label.pack(side=tk.LEFT, padx=25, pady=5)
 
         self.label = label
-        self.entries = []
-        for i in range(0, entries_count):
+        self.entries = {}
+        for name in entries_names:
             entry = tk.Entry(self)
             entry.pack(side=tk.LEFT, padx=5, pady=5)
-            self.entries.append(entry)
+            self.entries[name] = entry
 
     def destroy(self) -> NoReturn:
         self.label.destroy()
-        [entry.destroy() for entry in self.entries]
+        [entry.destroy() for entry in self.entries.values()]
         super().destroy()
 
-    def get_entries_data(self):
+    def get_entries_data(self) -> Dict:
+        """
+        Method for extracting user data from row to dict
+        Returns:
+            Dict with data
+        """
         entries_content = {}
-        for i, data in enumerate(self.entries):
-            ...
+        for name, entre in self.entries.items():
+            entries_content[name] = entre.get()
 
         return entries_content
