@@ -8,7 +8,8 @@ from typing import List, Dict, NoReturn
 from functools import partial
 
 # internal
-from loaders import save_to_xml
+from loaders import save_to_file
+from loaders.const import Entities
 from .raw_observer import RowsObserver
 from ..const.params_keys import ParamsKeys
 from ..const.hex_colors import HexColors
@@ -18,9 +19,9 @@ from .handlers import quite_callback
 
 components_inits = [
     {ParamsKeys.ENTRIES: OBJECT_FRAME_COLUMN_NAMES, ParamsKeys.TITLE: 'Object', ParamsKeys.X_RATIO: 0.6,
-     ParamsKeys.Y_RATIO: 0.4, ParamsKeys.FRAME_NAME: 'Objects frame', ParamsKeys.BACKGROUND: HexColors.LIGHT_GREEN},
+     ParamsKeys.Y_RATIO: 0.4, ParamsKeys.FRAME_NAME: Entities.OBJECT, ParamsKeys.BACKGROUND: HexColors.LIGHT_GREEN},
     {ParamsKeys.ENTRIES: MEASUREMENT_FRAME_COLUMN_NAMES, ParamsKeys.TITLE: 'Measurement', ParamsKeys.X_RATIO: 0.6,
-     ParamsKeys.Y_RATIO: 0.4, ParamsKeys.FRAME_NAME: 'Measurements frame', ParamsKeys.BACKGROUND: HexColors.EGS_YELLOW}
+     ParamsKeys.Y_RATIO: 0.4, ParamsKeys.FRAME_NAME: Entities.MEASUREMENT, ParamsKeys.BACKGROUND: HexColors.EGS_YELLOW}
 ]
 
 
@@ -79,4 +80,4 @@ class App(tk.Tk):
             observer_data = observer.load_data_from_entries()
             result[observer_name] = observer_data
 
-        save_to_xml(result)
+        save_to_file(result)

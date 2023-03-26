@@ -1,14 +1,19 @@
-<a>
-  <objects_array>
+<root>
+  <array>
+    <type>object</type>
     <item>
-      <name>separator_0</name>
+      <Name>sep</Name>
+      <Metrics>1</Metrics>
+      <Connections>1</Connections>
     </item>
+  </array>
+  <array>
+    <type>measurement</type>
     <item>
-      <name>separator_1</name>
+      <Name>metr</Name>
+      <Type>1</Type>
+      <Values>1</Values>
+      <Connections>1</Connections>
     </item>
-    <item>
-      <name>separator_2</name>
-    </item>
-  </objects_array>
-  <measuremens_array />
-</a>
+  </array>
+</root>

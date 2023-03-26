@@ -1,0 +1,60 @@
+<root>
+  <array>
+    <type>object</type>
+    <item>
+      <Name>separator</Name>
+      <Metrics>pressure, weight, temperature</Metrics>
+      <Connections>heater</Connections>
+    </item>
+  </array>
+  <array>
+    <type>object</type>
+    <item>
+      <Name>separator</Name>
+      <Metrics>pressure, weight, temperature</Metrics>
+      <Connections>heater</Connections>
+    </item>
+  </array>
+  <array>
+    <type>measurement</type>
+    <item>
+      <Name>pressure</Name>
+      <Type>numeric</Type>
+      <Values>1, 2, 3, 4, 5, 6, 7, 8</Values>
+      <Connections />
+    </item>
+    <item>
+      <Name>weight</Name>
+      <Type>numeric</Type>
+      <Values>1000, 1500, 2000</Values>
+      <Connections />
+    </item>
+    <item>
+      <Name>temperature</Name>
+      <Type>numeric</Type>
+      <Values>10, 20 ,30</Values>
+      <Connections />
+    </item>
+  </array>
+<array>
+    <type>measurement</type>
+    <item>
+      <Name>pressure</Name>
+      <Type>numeric</Type>
+      <Values>1, 2, 3, 4, 5, 6, 7, 8</Values>
+      <Connections />
+    </item>
+    <item>
+      <Name>weight</Name>
+      <Type>numeric</Type>
+      <Values>1000, 1500, 2000</Values>
+      <Connections />
+    </item>
+    <item>
+      <Name>temperature</Name>
+      <Type>numeric</Type>
+      <Values>10, 20 ,30</Values>
+      <Connections />
+    </item>
+  </array>
+</root>
