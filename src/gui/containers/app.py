@@ -39,7 +39,7 @@ class App(tk.Tk):
     def _init_components(self, observers_data: List[Dict]):
         observers_frame = tk.Frame(self)
         buttons_frame = tk.Frame(self, background=HexColors.LIGHT_GREEN,
-                                 width=self.x_scale*0.4, height=self.y_scale*0.4)
+                                 width=self.x_scale, height=self.y_scale)
         self._add_input_frames(observers_frame, observers_data)
         self._add_main_buttons(buttons_frame)
         observers_frame.pack(side=tk.LEFT, padx=50)

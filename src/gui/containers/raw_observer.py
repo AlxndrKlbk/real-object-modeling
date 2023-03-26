@@ -19,7 +19,8 @@ class RowsObserver(tk.LabelFrame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.rows_list: List[DefaultRow] = []
-        self.scrollbar: tk.Scrollbar = ...
+        self.scrollbar_y: tk.Scrollbar = ...
+        self.scrollbar_x: tk.Scrollbar = ...
         self._entries: List[str] = ...
         self._row_title: str = ...
         self._buttons_toolbar: ButtonsToolbar = ...
@@ -45,10 +46,8 @@ class RowsObserver(tk.LabelFrame):
         self._buttons_toolbar = ButtonsToolbar(self.interior, buttons_spec)
         self._add_title(**init_data)
 
-        interior_id = self.canvas.create_window(0, 0, window=self.interior, anchor=tk.NW)
-
+        self.canvas.create_window(0, 0, window=self.interior, anchor=tk.NW)
         self._bind_interior()
-        self._bind_canvas(interior_id)
 
     def _add_title(self, **kwargs):
         space_frame = tk.Frame(self.interior, **kwargs)
@@ -63,16 +62,22 @@ class RowsObserver(tk.LabelFrame):
         """
         Method initialize canvas and scrollbar
         """
-        self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        self.scrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
+        self.scrollbar_y = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        self.scrollbar_x = ttk.Scrollbar(self, orient=tk.HORIZONTAL)
+        self.scrollbar_y.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
+        self.scrollbar_x.pack(fill=tk.X, side=tk.BOTTOM, expand=tk.FALSE)
         self.canvas = tk.Canvas(self, bd=0, highlightthickness=0,
-                                yscrollcommand=self.scrollbar.set, **kwargs)
+                                yscrollcommand=self.scrollbar_y.set,
+                                xscrollcommand=self.scrollbar_x.set,
+                                **kwargs)
 
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
-        self.scrollbar.config(command=self.canvas.yview)
+        self.scrollbar_y.config(command=self.canvas.yview)
+        self.scrollbar_x.config(command=self.canvas.xview)
 
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
+        self.canvas.propagate(False)
 
     def _bind_interior(self) -> NoReturn:
         """
@@ -81,21 +86,7 @@ class RowsObserver(tk.LabelFrame):
         def _configure_interior(_):
             size = (0, 0, str(self.interior.winfo_reqwidth()), str(self.interior.winfo_reqheight()))
             self.canvas.config(scrollregion=size)
-            if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
-                self.canvas.config(width=self.interior.winfo_reqwidth())
         self.interior.bind('<Configure>', _configure_interior)
-
-    def _bind_canvas(self, interior_id: int) -> NoReturn:
-        """
-        Update the inner frame's width to fill the canvas.
-        Args:
-            interior_id: identifier of window
-        """
-        def _configure_canvas(_):
-            if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
-                self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
-
-        self.canvas.bind('<Configure>', _configure_canvas)
 
     def add_row(self) -> NoReturn:
         """Method for inserting row"""
