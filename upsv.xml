@@ -1,0 +1,108 @@
+<root>
+  <array>
+    <type>object</type>
+    <item>
+      <Name>2_phase_separator_stage_1</Name>
+      <Metrics>separator_gas_productivity, separation_pressure, separator_volume, separator_cost</Metrics>
+      <Connections>settler_horizontal, gas_separator</Connections>
+    </item>
+    <item>
+      <Name>settler_horizontal</Name>
+      <Metrics>settler_volume</Metrics>
+      <Connections>2_phase_separator_stage_2, pump_stage_1 </Connections>
+    </item>
+    <item>
+      <Name>gas_separator</Name>
+      <Metrics>gas_separator_volume, gas_separator_pressure, gas_separator_productivity</Metrics>
+      <Connections>settler_horizontal</Connections>
+    </item>
+    <item>
+      <Name>2_phase_separator_stage_2</Name>
+      <Metrics>separator_gas_productivity, separation_pressure, separator_volume, separator_cost</Metrics>
+      <Connections>pump_stage_2</Connections>
+    </item>
+    <item>
+      <Name>pump_stage_1</Name>
+      <Metrics>drive_power</Metrics>
+      <Connections />
+    </item>
+    <item>
+      <Name>pump_stage_2</Name>
+      <Metrics>drive_power</Metrics>
+      <Connections />
+    </item>
+  </array>
+  <array>
+    <type>measurement</type>
+    <item>
+      <Name>separator_gas_productivity</Name>
+      <Type>numeric</Type>
+      <Values>0.5, 0.56, 0.75, 0.94, 1.32, 1.8, 2.6, 3.6, 4, 5.4, 7.8, 10.5</Values>
+      <Dimension>million m3/day</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>separation_pressure</Name>
+      <Type>numeric</Type>
+      <Values>0.6, 1, 1.6, 2.5, 4, 6.3</Values>
+      <Dimension>MPa</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>separator_volume</Name>
+      <Type>numeric</Type>
+      <Values>6.3, 12.5, 25, 50, 100,150</Values>
+      <Dimension>m3</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>separator_cost</Name>
+      <Type>numeric</Type>
+      <Values>1.5, 1.8, 2.6, 3, 3.9, 4.3, 6.3, 8.2, 8.8, 15, 25, 60</Values>
+      <Dimension>million rub</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>drive_power</Name>
+      <Type>numeric</Type>
+      <Values>0.15, 6, 8, 16, 32</Values>
+      <Dimension>MW</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>pump_gas_productivity</Name>
+      <Type>numeric</Type>
+      <Values>21, 315,  416, 1200, 3600</Values>
+      <Dimension>million m3/day</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>settler_volume</Name>
+      <Type>numeric</Type>
+      <Values>50, 100, 200</Values>
+      <Dimension>m3</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>gas_separator_volume</Name>
+      <Type>numeric</Type>
+      <Values>0.8, 1.6, 4, 8, 16</Values>
+      <Dimension>m3</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>gas_separator_pressure</Name>
+      <Type>numeric</Type>
+      <Values>2.5, 4, 6.3, 8.8</Values>
+      <Dimension>MPa</Dimension>
+      <Connections />
+    </item>
+    <item>
+      <Name>gas_separator_productivity</Name>
+      <Type>numeric</Type>
+      <Values>245, 325, 387, 435, 579, 705</Values>
+      <Dimension>million m3/day</Dimension>
+      <Connections />
+    </item>
+  </array>
+</root>
