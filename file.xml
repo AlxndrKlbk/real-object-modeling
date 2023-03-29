@@ -2,18 +2,19 @@
   <array>
     <type>object</type>
     <item>
-      <Name>sep</Name>
-      <Metrics>1</Metrics>
-      <Connections>1</Connections>
+      <Name>test</Name>
+      <Metrics>test</Metrics>
+      <Connections>test</Connections>
     </item>
   </array>
   <array>
     <type>measurement</type>
     <item>
-      <Name>metr</Name>
-      <Type>1</Type>
-      <Values>1</Values>
-      <Connections>1</Connections>
+      <Name>test</Name>
+      <Type>test</Type>
+      <Values>test</Values>
+      <Dimension>test</Dimension>
+      <Connections>test</Connections>
     </item>
   </array>
 </root>

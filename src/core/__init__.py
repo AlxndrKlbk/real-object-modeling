@@ -2,5 +2,5 @@
 
 __author__ = 'Kolbeko A.B.'
 
-from measurements import *
-from models import *
+from .measurements import *
+from .models import *

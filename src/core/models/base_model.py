@@ -3,31 +3,42 @@
 __author__ = 'Kolbeko A.B'
 
 # built-in
-from typing import List, Type, NoReturn, Callable, Iterable
+from typing import List, Type, NoReturn, Callable, Iterable, Dict
+from copy import deepcopy
 
 # internal
 from .abc_model import AbcModel
+from core.layer import ObjectAttr
+from core.measurements.base_feature import BaseFeature
+
 
 links_hint = List[Type[Callable[[AbcModel], AbcModel]]]
 
 
 class BaseModel(AbcModel):
 
-    def _get_links(self) -> links_hint:
-        return self._links
+    def __init__(self, params: Dict):
+        for key, value in params:
+            if key in [ObjectAttr.FEATURES, ObjectAttr.LINKS]:
+                value = [val.strip() for val in value.split(',')]
+            object.__setattr__(self, key, value)
 
-    def _init_specs(self, params) -> NoReturn:
-        """Method for initialization of measurement for object"""
-        for spec_type, spec_sequence in params:
-            self._iterate_spec(spec_type, spec_sequence)
+    def __getattribute__(self, item):
+        return self[item]
 
-    def _iterate_spec(self, spec_name: str, spec_sequence: Iterable):
+    def get_links(self) -> links_hint:
+        return getattr(self, ObjectAttr.LINKS)
+
+    def set_features(self, feature_entities: Dict[BaseFeature]) -> NoReturn:
         """Method iterate specifications and direct data for specific handlers"""
-        init_container = []
-        for spec in spec_sequence:
 
-            #  ToDo
-            #  define possible spec types, data structures and handlers for them
-            initialized = spec()
-            init_container.append(initialized)
-        setattr(self, '_' + spec_name, init_container)
+        for feature_name in self[ObjectAttr.FEATURES]:
+            feature_instance = feature_entities.get(feature_name)
+
+            if feature_instance is None:
+                # ToDo
+                #  possible it is error in data, need to handling it
+                continue
+
+            feature_instance = deepcopy(feature_instance)
+            self._features[feature_name] = feature_instance

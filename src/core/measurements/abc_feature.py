@@ -13,15 +13,13 @@ from typing import TypeVar, List, Dict
 generic_types = TypeVar('generic_types', bound=Number | str)
 
 
-class AbcDimension(ABC):
-
-    def __init__(self, params: Dict):
-        self._header: str = ...
-        self._dimension: str = ...
-        self._scale_step: List[generic_types] = ...
-        self.load_spec(params)
+class AbcFeature(ABC):
 
     @abstractmethod
-    def load_spec(self, params: Dict):
-        """Method for downloading specification"""
+    def __init__(self, params: Dict):
         ...
+
+        # ToDo
+        # support possibility to init possible values by steps for numeric features
+        self._scale_step: List[generic_types] = ...
+        # self.load_spec(params)

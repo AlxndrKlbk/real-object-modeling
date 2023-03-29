@@ -4,35 +4,29 @@ __author__ = 'Kolbeko A.B.'
 
 # built-in
 from abc import ABC, abstractmethod
-from typing import List, Type, NoReturn, Callable, Dict, Iterable
+from typing import List, Type, NoReturn, Callable, Dict
 
 # internal
-from core.measurements import AbcDimension
+from core.measurements import AbcFeature
+from core.measurements import BaseFeature
 
-dimensions_hint = List[Type[Callable[[AbcDimension, ...], AbcDimension]]]
+features_hint = List[Type[Callable[[AbcFeature, ...], AbcFeature]]]
 
 
 class AbcModel(ABC):
     """Class define interface for object-representation"""
 
+    @abstractmethod
     def __init__(self, params: Dict):
-        self._dimensions: dimensions_hint = ...
+        self._name: str = ...
+        self._features: features_hint = ...
         self._links: List[Type[Callable[[AbcModel, ...], AbcModel]]] = ...
-        self._init_specs(params)
-
-    def get_dimensions(self) -> List[AbcDimension]:
-        return self._dimensions
 
     @abstractmethod
-    def _get_links(self):
+    def get_links(self):
         return self._links
 
     @abstractmethod
-    def _init_specs(self, params: Dict) -> NoReturn:
-        """Method for initialization of measuring for object"""
-        ...
-
-    @abstractmethod
-    def _iterate_spec(self, spec_name: str, spec_sequence: Iterable):
-        """Inizialize object by specificatino sequence"""
+    def set_features(self, feature_entities: Dict[BaseFeature]) -> NoReturn:
+        """Initialize feature instances and write on object instance links"""
         ...
