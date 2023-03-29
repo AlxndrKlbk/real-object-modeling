@@ -8,7 +8,7 @@ from enum import Enum, unique
 
 
 @unique
-class FeatureTypes(Enum):
+class FeatureTypes(str, Enum):
     """Possible feature types"""
 
     NUMERIC = 'numeric'

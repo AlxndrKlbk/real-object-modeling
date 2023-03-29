@@ -27,6 +27,6 @@ class AbcModel(ABC):
         return self._links
 
     @abstractmethod
-    def set_features(self, feature_entities: Dict[BaseFeature]) -> NoReturn:
+    def set_features(self, feature_entities: Dict[str, BaseFeature]) -> NoReturn:
         """Initialize feature instances and write on object instance links"""
         ...

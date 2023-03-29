@@ -14,13 +14,14 @@ from .abc_feature import AbcFeature
 class BaseFeature(AbcFeature):
 
     def __init__(self, params: Dict):
-        for key, value in params:
-            if key in [FeaturesAttr.LINKS, FeaturesAttr.Values]:
-                if params.get(FeaturesAttr.TYPE) == FeatureTypes.NUMERIC:
+        for key, value in params.items():
+            if key in [FeaturesAttr.LINKS, FeaturesAttr.VALUES]:
+                if params.get(FeaturesAttr.TYPE) == FeatureTypes.NUMERIC and value:
                     # ToDo
-                    #  possible errors while processing data
+                    #  1.possible errors while processing data
+                    #  2.Need to use more effective numeric type
                     value = [float(val.strip()) for val in value.split(',')]
-                else:
+                elif value:
                     value = [val.strip() for val in value.split(',')]
 
             object.__setattr__(self, key, value)
