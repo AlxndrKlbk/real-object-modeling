@@ -8,7 +8,7 @@ from io import StringIO
 import xml.etree.ElementTree as et
 
 # internal
-from const import XMLTags, Entities
+from .const import XMLTags, Entities
 from core.models import BaseModel
 from core.measurements import BaseFeature
 from core.layer import ObjectAttr

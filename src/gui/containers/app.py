@@ -10,6 +10,10 @@ from functools import partial
 # internal
 from loaders import save_to_file
 from loaders.const import Entities
+from loaders.download import (
+    parsed_structure_hint,
+    download_from_xml
+)
 from .raw_observer import RowsObserver
 from ..const.params_keys import ParamsKeys
 from ..const.hex_colors import HexColors
@@ -32,7 +36,7 @@ class App(tk.Tk):
         self.x_scale = self.winfo_screenwidth()
         self.y_scale = self.winfo_screenheight()
         self.geometry(f'{self.x_scale}x{self.y_scale}')
-        self.frames = {}
+        self.frames: Dict[str, RowsObserver] = {}
         self._init_components(components_inits)
         self._set_callbacks()
 
@@ -46,7 +50,7 @@ class App(tk.Tk):
         buttons_frame.pack(side=tk.LEFT, padx=20)
 
     def _add_main_buttons(self, frame: tk.Frame):
-        button = tk.Button(frame, text='save to xml', command=self.load_data_from_entries, bg=HexColors.BLUE)
+        button = tk.Button(frame, text='save to xml', command=self._load_data_from_entries, bg=HexColors.BLUE)
         button.pack(side=tk.TOP)
 
     def _add_input_frames(self, frame: tk.Frame, components_data: List[Dict]):
@@ -71,7 +75,7 @@ class App(tk.Tk):
         quite_wrapper = partial(quite_callback, self)
         self.protocol("WM_DELETE_WINDOW", quite_wrapper)
 
-    def load_data_from_entries(self) -> NoReturn:
+    def _load_data_from_entries(self) -> NoReturn:
         """
         Method for save data from input boxes. Binded to button
         """
@@ -81,3 +85,16 @@ class App(tk.Tk):
             result[observer_name] = observer_data
 
         save_to_file(result)
+
+    @staticmethod
+    def _init_presentation_objects(path_str: str = '../../saves/upsv.xml') -> parsed_structure_hint:
+        """
+        Method for binding to button logic for processing XML-file to
+        entire objects and start generating structures
+        Args:
+            path_str: path to tardet xml file
+        Returns:
+           parsed_structure_hint
+        """
+        downloaded = download_from_xml(path_str)
+        return downloaded
